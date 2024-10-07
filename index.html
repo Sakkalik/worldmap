@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minimalistic World Map</title>
+    <title>Interactive World Map</title>
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <style>
@@ -15,12 +15,6 @@
             font-size: 14px;
             color: #333;
         }
-        /* Make the map background white for a clean look */
-        body, html {
-            margin: 0;
-            padding: 0;
-            background-color: white;
-        }
     </style>
 </head>
 <body>
@@ -29,39 +23,31 @@
 
 <!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<!-- Include the GeoJSON data inline to avoid fetch issues -->
+<script src="https://unpkg.com/world-atlas/countries-50m.json"></script>
 
 <script>
-    // Initialize the map (without any tile layer)
-    var map = L.map('map', {
-        center: [20, 0],  // Centered on the world
-        zoom: 2,          // Zoom level
-        maxZoom: 5,
-        minZoom: 2,
-        zoomControl: false, // No zoom control
-        attributionControl: false // Remove any attribution
-    });
+    // Initialize the map
+    var map = L.map('map').setView([20, 0], 2); // Centered on the world
 
-    // GeoJSON for world countries (white with black borders for minimalism)
+    // Add a tile layer (background map)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    // GeoJSON for world countries (embedded in the script to avoid fetch issues)
     fetch('https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json')
         .then(response => response.json())
         .then(data => {
             // Add country data to the map
             L.geoJSON(data, {
                 style: function (feature) {
-                    return {
-                        fillColor: "#ffffff", // White fill
-                        color: "#000000",     // Black borders
-                        weight: 1.5,          // Border thickness
-                        fillOpacity: 1.0
-                    };
+                    return {color: "#3388ff"}; // Default color for countries
                 },
                 onEachFeature: function (feature, layer) {
                     layer.on({
                         click: function () {
-                            layer.setStyle({
-                                fillColor: '#ff6600', // Change color on click (orange)
-                                fillOpacity: 0.8
-                            });
+                            layer.setStyle({fillColor: '#ff6600'}); // Change country color on click
                         }
                     });
                     // Add a popup with the country name
@@ -71,9 +57,14 @@
         })
         .catch(err => console.error('Error loading GeoJSON:', err));
 
-    // Add a minimalistic marker (pin) to the map
-    var marker = L.marker([48.8566, 2.3522], {icon: L.divIcon({className: 'custom-pin'})}).addTo(map); // Paris
+    // Add a marker (pin) to the map
+    var marker = L.marker([48.8566, 2.3522]).addTo(map); // Paris coordinates
     marker.bindPopup("<b>Paris, France</b><br>City of Light").openPopup();
 
-    // Add more minimalistic pins
-    var marker2 = L.marker([35.6895, 139.6917], {icon: L.divIcon({className: 'custom-pin'})}).
+    // Add more pins
+    var marker2 = L.marker([35.6895, 139.6917]).addTo(map); // Tokyo coordinates
+    marker2.bindPopup("<b>Tokyo, Japan</b><br>Capital of Japan").openPopup();
+</script>
+
+</body>
+</html>
