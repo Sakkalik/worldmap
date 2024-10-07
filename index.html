@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detailed Minimalist World Map</title>
+    <title>Highly Detailed World Map</title>
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <!-- Fullscreen plugin CSS -->
@@ -66,7 +66,7 @@
     var map = L.map('map', {
         center: [20, 0],  // Center of the world
         zoom: 3,          // Initial zoom level
-        maxZoom: 12,      // Further increased maximum zoom level
+        maxZoom: 12,      // Increased maximum zoom level
         minZoom: 2,
         zoomControl: true,
         attributionControl: false
@@ -93,7 +93,7 @@
     });
     map.addControl(new homeControl());
 
-    // Fetch and use a more detailed GeoJSON
+    // Fetch a more detailed GeoJSON from Natural Earth
     fetch('https://raw.githubusercontent.com/datasets/geo-boundaries-world-110m/master/countries.geojson')
         .then(response => response.json())
         .then(data => {
