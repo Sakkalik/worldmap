@@ -92,8 +92,8 @@
     });
     map.addControl(new homeControl());
 
-    // Fetch and use a reliable high-resolution GeoJSON (with smaller islands)
-    fetch('https://raw.githubusercontent.com/datasets/geo-boundaries-world-110m/master/countries.geojson')
+    // Fetch and use locally hosted GeoJSON file
+    fetch('countries.geojson') // Local file from the same GitHub Pages repository
         .then(response => response.json())
         .then(data => {
             L.geoJSON(data, {
