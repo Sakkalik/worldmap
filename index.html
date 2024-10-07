@@ -65,8 +65,8 @@
     // Initialize the map
     var map = L.map('map', {
         center: [20, 0],  // Center of the world
-        zoom: 2,          // Initial zoom level
-        maxZoom: 8,
+        zoom: 3,          // Initial zoom level increased for better visibility
+        maxZoom: 10,      // Increased maximum zoom level
         minZoom: 2,
         zoomControl: true,
         attributionControl: false
@@ -86,7 +86,7 @@
             var homeDiv = L.DomUtil.create('div', 'leaflet-control-home');
             homeDiv.innerHTML = '🏠'; // Home icon
             L.DomEvent.on(homeDiv, 'click', function() {
-                map.setView([20, 0], 2); // Reset to initial view
+                map.setView([20, 0], 3); // Reset to initial view
             });
             return homeDiv;
         }
@@ -146,6 +146,10 @@
         .bindPopup("<b>Sydney, Australia</b><br>Sales Office.");
     L.marker([55.7558, 37.6173], { icon: pinStyle }).addTo(map) // Moscow
         .bindPopup("<b>Moscow, Russia</b><br>Technical Office.");
+    L.marker([1.3521, 103.8198], { icon: pinStyle }).addTo(map) // Singapore
+        .bindPopup("<b>Singapore</b><br>Regional Hub.");
+    L.marker([-34.9011, -56.1645], { icon: pinStyle }).addTo(map) // Montevideo
+        .bindPopup("<b>Montevideo, Uruguay</b><br>Branch Office.");
 
 </script>
 
