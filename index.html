@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minimalist World Map with Full-Screen & Home Button</title>
+    <title>Detailed Minimalist World Map</title>
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <!-- Fullscreen plugin CSS -->
@@ -65,8 +65,8 @@
     // Initialize the map
     var map = L.map('map', {
         center: [20, 0],  // Center of the world
-        zoom: 3,          // Initial zoom level increased for better visibility
-        maxZoom: 10,      // Increased maximum zoom level
+        zoom: 3,          // Initial zoom level
+        maxZoom: 12,      // Further increased maximum zoom level
         minZoom: 2,
         zoomControl: true,
         attributionControl: false
@@ -93,7 +93,7 @@
     });
     map.addControl(new homeControl());
 
-    // Fetch and use a reliable high-resolution GeoJSON
+    // Fetch and use a more detailed GeoJSON
     fetch('https://raw.githubusercontent.com/datasets/geo-boundaries-world-110m/master/countries.geojson')
         .then(response => response.json())
         .then(data => {
@@ -150,6 +150,10 @@
         .bindPopup("<b>Singapore</b><br>Regional Hub.");
     L.marker([-34.9011, -56.1645], { icon: pinStyle }).addTo(map) // Montevideo
         .bindPopup("<b>Montevideo, Uruguay</b><br>Branch Office.");
+    L.marker([15.8700, 100.9925], { icon: pinStyle }).addTo(map) // Thailand
+        .bindPopup("<b>Bangkok, Thailand</b><br>Regional Hub.");
+    L.marker([28.6139, 77.2090], { icon: pinStyle }).addTo(map) // India
+        .bindPopup("<b>New Delhi, India</b><br>Technical Office.");
 
 </script>
 
