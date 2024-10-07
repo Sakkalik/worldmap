@@ -92,8 +92,8 @@
     });
     map.addControl(new homeControl());
 
-    // Fetch and use high-resolution GeoJSON (with smaller islands)
-    fetch('https://raw.githubusercontent.com/datasets/geo-admin1-boundaries/master/data/countries.geojson')
+    // Fetch and use a reliable high-resolution GeoJSON (with smaller islands)
+    fetch('https://raw.githubusercontent.com/datasets/geo-boundaries-world-110m/master/countries.geojson')
         .then(response => response.json())
         .then(data => {
             L.geoJSON(data, {
@@ -122,7 +122,7 @@
                     });
 
                     // Add popup with country name
-                    layer.bindPopup('<b>' + feature.properties.name + '</b>');
+                    layer.bindPopup('<b>' + feature.properties.ADMIN + '</b>'); // Use 'ADMIN' for country name in this dataset
                 }
             }).addTo(map);
         })
