@@ -3,14 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minimalist World Map</title>
+    <title>Minimalist World Map with Full-Screen & Home Button</title>
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <!-- Fullscreen plugin CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.fullscreen/Control.FullScreen.css" />
     <style>
         #map {
             height: 600px;
             width: 100%;
         }
+
+        /* Fullscreen button style */
+        .leaflet-control-home, .leaflet-control-fullscreen {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            cursor: pointer;
+            padding: 8px;
+        }
+
         /* Minimalistic style for the entire map */
         html, body {
             margin: 0;
@@ -18,9 +30,9 @@
             background-color: white;
         }
 
-        /* Styling the map container */
+        /* Styling for the map container */
         .leaflet-container {
-            background-color: white; /* Pure white background */
+            background-color: white;
         }
 
         /* Style for custom markers/pins */
@@ -45,26 +57,49 @@
 
 <!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<!-- Fullscreen plugin JS -->
+<script src="https://unpkg.com/leaflet.fullscreen/Control.FullScreen.js"></script>
 
 <script>
-    // Initialize the map (no background layer)
+    // Initialize the map
     var map = L.map('map', {
-        center: [20, 0],  // World center
+        center: [20, 0],  // Center of the world
         zoom: 2,          // Initial zoom level
-        maxZoom: 5,
+        maxZoom: 8,
         minZoom: 2,
         zoomControl: true,
-        attributionControl: false // Remove any default attribution text
+        attributionControl: false
     });
 
-    // Load GeoJSON data for the countries
-    fetch('https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json')
+    // Fullscreen button control
+    L.control.fullscreen({
+        position: 'topleft',
+        title: 'Toggle Fullscreen',
+        titleCancel: 'Exit Fullscreen',
+    }).addTo(map);
+
+    // Home button to reset map position
+    var homeControl = L.Control.extend({
+        options: { position: 'topleft' },
+        onAdd: function(map) {
+            var homeDiv = L.DomUtil.create('div', 'leaflet-control-home');
+            homeDiv.innerHTML = '🏠'; // Home icon
+            L.DomEvent.on(homeDiv, 'click', function() {
+                map.setView([20, 0], 2); // Reset to initial view
+            });
+            return homeDiv;
+        }
+    });
+    map.addControl(new homeControl());
+
+    // Fetch and use high-resolution GeoJSON (with smaller islands)
+    fetch('https://raw.githubusercontent.com/datasets/geo-admin1-boundaries/master/data/countries.geojson')
         .then(response => response.json())
         .then(data => {
             L.geoJSON(data, {
                 style: function (feature) {
                     return {
-                        fillColor: "#ffffff", // White color for the countries
+                        fillColor: "#ffffff", // White fill
                         color: "#808080",     // Grey borders
                         weight: 1.2,          // Border thickness
                         fillOpacity: 1.0
@@ -93,7 +128,7 @@
         })
         .catch(err => console.error('Error loading GeoJSON:', err));
 
-    // Add custom markers/pins (similar to what you saw on the reference website)
+    // Add custom markers/pins (similar to the reference website)
     var pinStyle = L.divIcon({
         className: 'custom-pin', // Class for styling the pin
         iconSize: [12, 12]       // Size of the pin (circle)
@@ -106,6 +141,7 @@
         .bindPopup("<b>London, UK</b><br>Operational Branch.");
     L.marker([35.6895, 139.6917], { icon: pinStyle }).addTo(map) // Tokyo
         .bindPopup("<b>Tokyo, Japan</b><br>Regional Office.");
+
 </script>
 
 </body>
