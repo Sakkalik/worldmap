@@ -4,31 +4,66 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive World Map</title>
+    <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <style>
         #map {
-            height: 500px; /* Adjust height as needed */
+            height: 600px;
             width: 100%;
+        }
+        .custom-popup {
+            font-size: 14px;
+            color: #333;
         }
     </style>
 </head>
 <body>
-    <div id="map"></div>
 
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script>
-        // Initialize the map
-        const map = L.map('map').setView([20, 0], 2); // Center at [latitude, longitude], zoom level
+<div id="map"></div>
 
-        // Add OpenStreetMap tiles
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<!-- Add GeoJSON for world countries -->
+<script src="https://unpkg.com/world-atlas/countries-50m.json"></script>
 
-        // Add a marker
-        const marker = L.marker([51.5, -0.09]).addTo(map)
-            .bindPopup('<b>Hello world!</b><br />I am a popup.').openPopup();
-    </script>
+<script>
+    // Initialize the map
+    var map = L.map('map').setView([20, 0], 2); // Centered on the world
+
+    // Add a tile layer (background for the map)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Load GeoJSON for the world countries
+    fetch('https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson')
+        .then(response => response.json())
+        .then(data => {
+            L.geoJSON(data, {
+                style: function (feature) {
+                    return {color: "#3388ff"}; // Default country color
+                },
+                onEachFeature: function (feature, layer) {
+                    layer.on({
+                        click: function () {
+                            layer.setStyle({fillColor: '#ff6600'}); // Change color on click
+                        }
+                    });
+                    // Add country names as a popup on click
+                    layer.bindPopup('<b>' + feature.properties.ADMIN + '</b>');
+                }
+            }).addTo(map);
+        });
+
+    // Add a pin marker
+    var marker = L.marker([48.8566, 2.3522]).addTo(map); // Paris coordinates
+    marker.bindPopup("<b>Paris, France</b><br>City of Light").openPopup();
+
+    // Add more pins
+    var marker2 = L.marker([35.6895, 139.6917]).addTo(map); // Tokyo coordinates
+    marker2.bindPopup("<b>Tokyo, Japan</b><br>Capital of Japan").openPopup();
+
+</script>
+
 </body>
 </html>
