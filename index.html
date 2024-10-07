@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Highly Detailed World Map</title>
+    <title>Minimalist World Map with Full-Screen & Home Button</title>
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <!-- Fullscreen plugin CSS -->
@@ -28,27 +28,27 @@
         html, body {
             margin: 0;
             padding: 0;
-            background-color: white;
+            background-color: black;
         }
 
         /* Styling for the map container */
         .leaflet-container {
-            background-color: white;
+            background-color: black;
         }
 
         /* Custom pin styles */
         .custom-pin {
-            background-color: #ff6600; /* Pin color */
+            background-color: #d7f54b; /* Pin color */
             border-radius: 50%;        /* Make the pin circular */
             width: 12px;               /* Pin width */
             height: 12px;              /* Pin height */
             display: inline-block;      /* Display inline */
-            border: 2px solid white;   /* White border */
+            border: 2px solid black;   /* White border */
         }
 
         /* Hover effect for countries */
         .leaflet-interactive:hover {
-            fill: #ff6600 !important; /* Highlight color on hover */
+            fill: #eaeaea !important; /* Highlight color on hover */
         }
     </style>
 </head>
@@ -64,9 +64,9 @@
 <script>
     // Initialize the map
     var map = L.map('map', {
-        center: [20, 0],  // Center of the world
-        zoom: 2,          // Initial zoom level
-        maxZoom: 12,      // Increased maximum zoom level
+        center: [40, 0],  // Center of the world
+        zoom: 2,          // Initial zoom level increased for better visibility
+        maxZoom: 10,      // Increased maximum zoom level
         minZoom: 2,
         zoomControl: true,
         attributionControl: false
@@ -86,15 +86,15 @@
             var homeDiv = L.DomUtil.create('div', 'leaflet-control-home');
             homeDiv.innerHTML = '🏠'; // Home icon
             L.DomEvent.on(homeDiv, 'click', function() {
-                map.setView([20, 0], 2); // Reset to initial view
+                map.setView([40, 0], 3); // Reset to initial view
             });
             return homeDiv;
         }
     });
     map.addControl(new homeControl());
 
-    // Use a high-resolution GeoJSON dataset
-    fetch('https://raw.githubusercontent.com/jesusgollonet/natural-earth-geojson/master/ne_10m_admin_0_countries.geojson')
+    // Fetch and use a reliable high-resolution GeoJSON
+    fetch('https://raw.githubusercontent.com/datasets/geo-boundaries-world-110m/master/countries.geojson')
         .then(response => response.json())
         .then(data => {
             L.geoJSON(data, {
@@ -110,7 +110,7 @@
                     // Add hover interaction: change color on hover
                     layer.on('mouseover', function() {
                         layer.setStyle({
-                            fillColor: '#ff6600', // Highlight color on hover (orange)
+                            fillColor: '#808080', // Highlight color on hover (orange)
                             fillOpacity: 0.7
                         });
                     });
@@ -123,7 +123,9 @@
                     });
 
                     // Add popup with country name
-                    layer.bindPopup('<b>' + feature.properties.ADMIN + '</b>'); // Use 'ADMIN' for country name in this dataset
+                    // Check if 'ADMIN' property exists; if not, try 'name'
+                    var countryName = feature.properties.ADMIN || feature.properties.name || "Unknown Country";
+                    layer.bindPopup('<b>' + countryName + '</b>'); // Display country name
                 }
             }).addTo(map);
         })
@@ -150,10 +152,6 @@
         .bindPopup("<b>Singapore</b><br>Regional Hub.");
     L.marker([-34.9011, -56.1645], { icon: pinStyle }).addTo(map) // Montevideo
         .bindPopup("<b>Montevideo, Uruguay</b><br>Branch Office.");
-    L.marker([15.8700, 100.9925], { icon: pinStyle }).addTo(map) // Thailand
-        .bindPopup("<b>Bangkok, Thailand</b><br>Regional Hub.");
-    L.marker([28.6139, 77.2090], { icon: pinStyle }).addTo(map) // India
-        .bindPopup("<b>New Delhi, India</b><br>Technical Office.");
 
 </script>
 
