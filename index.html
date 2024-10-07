@@ -3,26 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minimalist World Map with Full-Screen & Home Button</title>
+    <title>Minimalist World Map</title>
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <!-- Fullscreen plugin CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.fullscreen/Control.FullScreen.css" />
     <style>
         #map {
             height: 600px;
             width: 100%;
         }
-
-        /* Fullscreen button style */
-        .leaflet-control-home, .leaflet-control-fullscreen {
-            background-color: white;
-            border-radius: 5px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-            cursor: pointer;
-            padding: 8px;
-        }
-
         /* Minimalistic style for the entire map */
         html, body {
             margin: 0;
@@ -30,9 +18,9 @@
             background-color: white;
         }
 
-        /* Styling for the map container */
+        /* Styling the map container */
         .leaflet-container {
-            background-color: white;
+            background-color: white; /* Pure white background */
         }
 
         /* Style for custom markers/pins */
@@ -57,49 +45,26 @@
 
 <!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-<!-- Fullscreen plugin JS -->
-<script src="https://unpkg.com/leaflet.fullscreen/Control.FullScreen.js"></script>
 
 <script>
-    // Initialize the map
+    // Initialize the map (no background layer)
     var map = L.map('map', {
-        center: [20, 0],  // Center of the world
+        center: [20, 0],  // World center
         zoom: 2,          // Initial zoom level
-        maxZoom: 8,
+        maxZoom: 5,
         minZoom: 2,
         zoomControl: true,
-        attributionControl: false
+        attributionControl: false // Remove any default attribution text
     });
 
-    // Fullscreen button control
-    L.control.fullscreen({
-        position: 'topleft',
-        title: 'Toggle Fullscreen',
-        titleCancel: 'Exit Fullscreen',
-    }).addTo(map);
-
-    // Home button to reset map position
-    var homeControl = L.Control.extend({
-        options: { position: 'topleft' },
-        onAdd: function(map) {
-            var homeDiv = L.DomUtil.create('div', 'leaflet-control-home');
-            homeDiv.innerHTML = '🏠'; // Home icon
-            L.DomEvent.on(homeDiv, 'click', function() {
-                map.setView([20, 0], 2); // Reset to initial view
-            });
-            return homeDiv;
-        }
-    });
-    map.addControl(new homeControl());
-
-    // Fetch and use locally hosted GeoJSON file
-    fetch('countries.geojson') // Local file from the same GitHub Pages repository
+    // Load GeoJSON data for the countries
+    fetch('https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json')
         .then(response => response.json())
         .then(data => {
             L.geoJSON(data, {
                 style: function (feature) {
                     return {
-                        fillColor: "#ffffff", // White fill
+                        fillColor: "#ffffff", // White color for the countries
                         color: "#808080",     // Grey borders
                         weight: 1.2,          // Border thickness
                         fillOpacity: 1.0
@@ -122,13 +87,13 @@
                     });
 
                     // Add popup with country name
-                    layer.bindPopup('<b>' + feature.properties.ADMIN + '</b>'); // Use 'ADMIN' for country name in this dataset
+                    layer.bindPopup('<b>' + feature.properties.name + '</b>');
                 }
             }).addTo(map);
         })
         .catch(err => console.error('Error loading GeoJSON:', err));
 
-    // Add custom markers/pins (similar to the reference website)
+    // Add custom markers/pins (similar to what you saw on the reference website)
     var pinStyle = L.divIcon({
         className: 'custom-pin', // Class for styling the pin
         iconSize: [12, 12]       // Size of the pin (circle)
@@ -141,7 +106,6 @@
         .bindPopup("<b>London, UK</b><br>Operational Branch.");
     L.marker([35.6895, 139.6917], { icon: pinStyle }).addTo(map) // Tokyo
         .bindPopup("<b>Tokyo, Japan</b><br>Regional Office.");
-
 </script>
 
 </body>
