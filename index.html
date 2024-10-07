@@ -36,6 +36,16 @@
             background-color: white;
         }
 
+        /* Custom pin styles */
+        .custom-pin {
+            background-color: #ff6600; /* Pin color */
+            border-radius: 50%;        /* Make the pin circular */
+            width: 12px;               /* Pin width */
+            height: 12px;              /* Pin height */
+            display: inline-block;      /* Display inline */
+            border: 2px solid white;   /* White border */
+        }
+
         /* Hover effect for countries */
         .leaflet-interactive:hover {
             fill: #ff6600 !important; /* Highlight color on hover */
@@ -83,7 +93,7 @@
     });
     map.addControl(new homeControl());
 
-    // Fetch and use a reliable high-resolution GeoJSON (with minimalistic style)
+    // Fetch and use a reliable high-resolution GeoJSON
     fetch('https://raw.githubusercontent.com/datasets/geo-boundaries-world-110m/master/countries.geojson')
         .then(response => response.json())
         .then(data => {
@@ -121,17 +131,21 @@
 
     // Add custom markers/pins
     var pinStyle = L.divIcon({
-        className: 'custom-pin',
-        iconSize: [12, 12] // Size of the pin (circle)
+        className: 'custom-pin', // Class for styling the pin
+        iconSize: [12, 12]       // Size of the pin (circle)
     });
 
-    // Example markers
+    // Example markers with locations
     L.marker([48.8566, 2.3522], { icon: pinStyle }).addTo(map) // Paris
         .bindPopup("<b>Paris, France</b><br>Headquarters.");
     L.marker([51.5074, -0.1278], { icon: pinStyle }).addTo(map) // London
         .bindPopup("<b>London, UK</b><br>Operational Branch.");
     L.marker([35.6895, 139.6917], { icon: pinStyle }).addTo(map) // Tokyo
         .bindPopup("<b>Tokyo, Japan</b><br>Regional Office.");
+    L.marker([-33.8688, 151.2093], { icon: pinStyle }).addTo(map) // Sydney
+        .bindPopup("<b>Sydney, Australia</b><br>Sales Office.");
+    L.marker([55.7558, 37.6173], { icon: pinStyle }).addTo(map) // Moscow
+        .bindPopup("<b>Moscow, Russia</b><br>Technical Office.");
 
 </script>
 
